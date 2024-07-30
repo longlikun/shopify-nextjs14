@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchProductList } from "@/lib";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import { formatPrice } from "@/util/formatPrice";
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -47,8 +48,8 @@ const mockProducts = [
 ]
 export default async function Home() {
 
-  
-// 查询商品列表
+
+  // 查询商品列表
   const result = await fetchProductList();
 
   const productList = result.body?.data.products.edges
@@ -60,7 +61,7 @@ export default async function Home() {
   return (
     <div className="bg-white">
 
-      <Header/>
+      <Header />
       {/* content */}
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
@@ -81,14 +82,14 @@ export default async function Home() {
                 </div>
                 <h3 className="mt-4 text-sm text-gray-700">{product.node.title}</h3>
                 <p className="mt-1 text-lg font-medium text-gray-900">{product.node.priceRange.minVariantPrice.currencyCode}</p>
-                <p className="mt-1 text-lg font-medium text-gray-900">{product.node.priceRange.minVariantPrice.amount}</p>
+                <p className="mt-1 text-lg font-medium text-gray-900">{formatPrice(product.node.priceRange.minVariantPrice.amount)}</p>
               </Link>
             ))}
           </div>
         </div>
       </div>
       {/* footer */}
-      <Footer/>
+      <Footer />
 
 
     </div>

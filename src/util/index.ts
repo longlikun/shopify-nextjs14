@@ -20,6 +20,7 @@
       
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`);
+        
       }
   
       const responseBody: T = await response.json();

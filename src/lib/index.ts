@@ -1,6 +1,7 @@
 import {
   ICartCreate,
   ICartCreateResponse,
+  ILineCollection,
   IProductList,
   IProductListResponst,
   ISingleProduct,
@@ -124,8 +125,8 @@ export async function fetchSingleProduct(
 }
 
 // checkout
-export async function createCart(lines: any): Promise<ICartCreateResponse> {
-  const singleProduct = gql`
+export async function createCart(lines: ILineCollection): Promise<ICartCreateResponse> {
+  const checkoutQuery = gql`
     mutation createCart($lines: [CartLineInput!]!) {
       cartCreate(input: { lines: $lines }) {
         cart {
@@ -149,7 +150,7 @@ export async function createCart(lines: any): Promise<ICartCreateResponse> {
   `;
 
   try {
-    const result = await shopifyFetch(singleProduct, { lines: lines });
+    const result = await shopifyFetch(checkoutQuery, { lines: lines });
 
     if (result.body) {
       return { status: 200, body: result.body as ICartCreate };

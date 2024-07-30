@@ -109,17 +109,16 @@ export type ICartCreateResponse = {
   error?: string;
 };
 
-interface Line {
-  merchandiseId: string;
+interface LineItem {
+  merchandiseId: string|undefined;
   quantity: number;
 }
-
-export interface ILineCollection {
-  lines: Line[];
-}
+export type ILineCollection = LineItem[];
 
 export type GraphQLResponse = {
   status: number;
   body: JSON;
   error?: string;
 };
+
+

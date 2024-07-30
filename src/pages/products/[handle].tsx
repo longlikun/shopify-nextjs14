@@ -6,13 +6,12 @@ import { createCart, fetchSingleProduct } from '@/lib';
 import { ILineCollection, ISingleProduct } from '@/types';
 import Header from '@/app/components/header';
 import ProductLayout from './layout';
+import { formatPrice } from '@/util/formatPrice';
 
 const SingleProduct = () => {
   const params = useParams<{ handle: string }>();
   console.log('pathname', params?.handle);
-  const [singleProduct, setSingleProduct] = useState<
-    ISingleProduct | undefined
-  >(undefined);
+  const [singleProduct, setSingleProduct] = useState<ISingleProduct | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,8 +39,9 @@ const SingleProduct = () => {
     },
   ];
 
+  // 创建订单
   async function checkout() {
-    const data = createCart(lineCollections);
+    const data =  createCart(lineCollections);
     const checkoutUrl = (await data).body?.data.cartCreate.cart.checkoutUrl;
     if (checkoutUrl) {
       window.location.href = checkoutUrl;
@@ -85,9 +85,10 @@ const SingleProduct = () => {
               </div>
               <div className='flex'>
                 <span className='title-font font-medium text-2xl text-gray-900'>
-                  {
-                    singleProduct?.data.product.priceRange.minVariantPrice
-                      .amount
+                  {singleProduct?.data.product.priceRange.minVariantPrice
+                      .amount&&
+                   formatPrice(singleProduct?.data.product.priceRange.minVariantPrice
+                      .amount)
                   }
                 </span>
                 <button
