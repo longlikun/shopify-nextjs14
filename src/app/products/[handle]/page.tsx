@@ -1,33 +1,49 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import '../../app/globals.css';
-import { redirect, useParams } from 'next/navigation';
-import { createCart, fetchSingleProduct } from '@/lib';
-import { ILineCollection, ISingleProduct } from '@/types';
-import Header from '@/app/components/header';
-import ProductLayout from './layout';
+import '@/app/globals.css';
+import {  useParams } from 'next/navigation';
+import { createCart, fetchSingleProduct } from '@/app/lib';
+import ProductLayout from '../layout';
 import { formatPrice } from '@/util/formatPrice';
+import { useQuery } from '@tanstack/react-query';
+import { User,getUsers } from '@/app/lib/api-requests';
 
 const SingleProduct = () => {
   const params = useParams<{ handle: string }>();
   console.log('pathname', params?.handle);
-  const [singleProduct, setSingleProduct] = useState<ISingleProduct | undefined>(undefined);
+  // const [singleProduct, setSingleProduct] = useState<ISingleProduct | undefined>(undefined);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (params?.handle) {
-        try {
-          const response = await fetchSingleProduct(params.handle);
-          const singleProduct = response.body;
-          setSingleProduct(singleProduct);
-        } catch (error) {
-          console.error('Error fetching product:', error);
-        }
+
+  const { isLoading, error, data: singleProduct } = useQuery({
+    queryKey: ['singleProduct', params?.handle],
+    queryFn: async () => {
+      if (!params?.handle) {
+        throw new Error('Product handle is required');
       }
-    };
+      const response = await fetchSingleProduct(params.handle);
+      if (response.status !== 200) {
+        throw new Error(response.error || 'Failed to fetch product');
+      }
+      return response.body; // 只返回 body 部分
+    },
+    enabled: !!params?.handle, // 只有在 handle 存在时才执行查询
+  });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (params?.handle) {
+  //       try {
+  //         const response = await fetchSingleProduct(params.handle);
+  //         const singleProduct = response.body;
+  //         setSingleProduct(singleProduct);
+  //       } catch (error) {
+  //         console.error('Error fetching product:', error);
+  //       }
+  //     }
+  //   };
 
-    fetchData();
-  }, [params?.handle]);
+  //   fetchData();
+  // }, [params?.handle]);
 
   console.log('singleProduct', singleProduct);
   const imageUrl = singleProduct?.data?.product?.images?.edges[0]?.node?.url;

@@ -8,8 +8,7 @@ import {
   ISingleProductResponst,
   Product,
 } from '@/types';
-import { shopifyFetch } from '../util';
-
+import { shopifyFetch } from '@/util';
 const gql = String.raw;
 
 // 查询商品列表
