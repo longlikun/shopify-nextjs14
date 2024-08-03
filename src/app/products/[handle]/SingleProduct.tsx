@@ -14,25 +14,21 @@ import { User,getUsers } from '@/app/lib/api-requests';
 // 延迟函数
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const SingleProduct = () => {
-  const params = useParams<{ handle: string }>();
-  console.log('pathname', params?.handle);
-  // const [singleProduct, setSingleProduct] = useState<ISingleProduct | undefined>(undefined);
-
-
+const SingleProduct = ({ handle }: { handle: string }) => {
+//   const params = useParams<{ handle: string }>();
   const { isLoading, error, data: singleProduct } = useQuery({
-    queryKey: ['singleProduct', params?.handle],
+    queryKey: ['singleProduct', handle],
     queryFn: async () => {
-      await delay(2000); // 添加2秒的延迟
+    //   await delay(2000); // 添加2秒的延迟
          // 模拟错误
-      // throw new Error('Simulated error for testing');
-       const response = await fetchSingleProduct(params.handle);
+    //   throw new Error('Simulated error for testing');
+       const response = await fetchSingleProduct(handle);
       if (response.status !== 200) {
         throw new Error(response.error || 'Failed to fetch product');
       }
       return response.body; // 只返回 body 部分
     },
-    enabled: !!params?.handle, // 只有在 handle 存在时才执行查询
+    enabled: !!handle, // 只有在 handle 存在时才执行查询
   });
   if (isLoading) {
     return <Loading/>;
@@ -42,23 +38,8 @@ const SingleProduct = () => {
     return <ErrorPage message={(error as Error).message}/>;
   }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (params?.handle) {
-  //       try {
-  //         const response = await fetchSingleProduct(params.handle);
-  //         const singleProduct = response.body;
-  //         setSingleProduct(singleProduct);
-  //       } catch (error) {
-  //         console.error('Error fetching product:', error);
-  //       }
-  //     }
-  //   };
 
-  //   fetchData();
-  // }, [params?.handle]);
 
-  console.log('singleProduct', singleProduct);
   const imageUrl = singleProduct?.data?.product?.images?.edges[0]?.node?.url;
   // console.log('2',singleProduct?.data.product.variants.edges[0].node.id)
   const lineCollections = [
