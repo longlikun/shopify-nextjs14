@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { fetchProductList } from "./lib";
+import { fetchProductList } from "@/app/lib";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import { formatPrice } from "@/util/formatPrice";
