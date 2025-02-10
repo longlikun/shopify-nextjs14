@@ -6,7 +6,7 @@ import Footer from "./components/footer";
 import { formatPrice } from "@/util/formatPrice";
 
 const navigation = [
-  { name: 'Product', href: '#' },
+  { name: '商品', href: '#' },
   { name: 'Features', href: '#' },
   { name: 'Marketplace', href: '#' },
   { name: 'Company', href: '#' },
